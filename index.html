@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คันบังบอร์ด - วิทยาการคำนวณ ป.6</title>
+    <!-- Tailwind CSS for UI styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind Custom Configuration for theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        cardBg: 'rgba(30, 41, 59, 0.7)',
+                        accentPurple: '#8b5cf6',
+                        accentBlue: '#3b82f6',
+                        accentGreen: '#10b981',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Prompt & Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', 'Prompt', sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, #0f172a 60%);
+        }
+        /* Custom scrollbar for columns */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        /* Dragging state classes */
+        .dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+        }
+        .drag-over {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="border-b border-slate-800 backdrop-blur-md bg-opacity-70 sticky top-0 z-40 bg-darkBg">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-accentPurple to-accentBlue p-2.5 rounded-xl shadow-lg shadow-purple-500/20">
+                    <i class="fa-solid fa-list-check text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">KanbanFlow 6</h1>
+                    <p class="text-xs text-slate-400 font-medium">เรียนรู้การทำงานเป็นระบบ - วิทยาการคำนวณ ป.6</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="openTab('learn')" class="nav-btn text-slate-400 hover:text-white px-3 py-2 font-medium transition" id="tab-learn">บทเรียน</button>
+                <button onclick="openTab('board')" class="nav-btn text-white bg-slate-800 px-3 py-2 rounded-lg font-medium transition" id="tab-board">กระดานภารกิจ</button>
+                <button onclick="openTab('quiz')" class="nav-btn text-slate-400 hover:text-white px-3 py-2 font-medium transition" id="tab-quiz">แบบทดสอบ</button>
+                <button onclick="openModal()" class="flex items-center space-x-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium px-4 py-2 rounded-lg shadow-lg shadow-indigo-500/30 transition duration-200 ease-in-out transform hover:-translate-y-0.5">
+                    <i class="fa-solid fa-plus text-sm"></i>
+                    <span>เพิ่มการ์ดงาน</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-8">
+        
+        <!-- ================= PAGE 1: LEARN (LESSONS) ================= -->
+        <section id="page-learn" class="hidden space-y-8">
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <h2 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                    บทเรียนวิทยาการคำนวณ ป.6
+                </h2>
+                <p class="mt-4 text-lg text-slate-400">
+                    เรียนรู้ทักษะที่สำคัญที่สุดในการคิดวิเคราะห์และแก้ปัญหาอย่างเป็นขั้นตอน
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Topic 1: Computational Thinking -->
+                <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 backdrop-blur-md">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="bg-purple-500/20 text-purple-400 p-3 rounded-xl">
+                            <i class="fa-solid fa-brain text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">1. แนวคิดเชิงคำนวณ (Computational Thinking)</h3>
+                    </div>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                        กระบวนการแก้ปัญหาแบบมีลำดับขั้นตอน คิดอย่างเป็นระบบ เพื่อช่วยแก้ปัญหาต่างๆ ทั้งในชีวิตประจำวันและในคอมพิวเตอร์อย่างมีประสิทธิภาพ
+                    </p>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-purple-500 pl-4 py-1">
+                            <h4 class="font-semibold text-white text-base">การแบ่งย่อยปัญหา (Decomposition)</h4>
+                            <p class="text-slate-400 text-xs mt-1">ย่อยปัญหาหรือระบบที่ซับซ้อนออกเป็นส่วนย่อยๆ เพื่อให้แก้ไขหรือทำความเข้าใจได้ง่ายขึ้น เช่น การแยกชิ้นส่วนของจักรยานออกมาซ่อม</p>
+                        </div>
+                        <div class="border-l-4 border-purple-500 pl-4 py-1">
+                            <h4 class="font-semibold text-white text-base">การจดจำรูปแบบ (Pattern Recognition)</h4>
+                            <p class="text-slate-400 text-xs mt-1">การหารูปแบบหรือความเหมือนของสิ่งต่างๆ เพื่อสร้างแบบแผนในการทำงาน เช่น การสังเกตว่าสุนัข แมว และเสือ ล้วนมี 4 ขาและมีหาง</p>
+                        </div>
+                        <div class="border-l-4 border-purple-500 pl-4 py-1">
+                            <h4 class="font-semibold text-white text-base">การคิดเชิงนามธรรม (Abstraction)</h4>
+                            <p class="text-slate-400 text-xs mt-1">คัดเลือกข้อมูลที่สำคัญและตัดส่วนที่ไม่เกี่ยวข้องออกไปเพื่อแก้ปัญหา เช่น การอ่านเส้นทางจากแผนที่ MRT โดยไม่สนใจสิ่งปลูกสร้างบนดิน</p>
+                        </div>
+                        <div class="border-l-4 border-purple-500 pl-4 py-1">
+                            <h4 class="font-semibold text-white text-base">การออกแบบขั้นตอนวิธี (Algorithm Design)</h4>
+                            <p class="text-slate-400 text-xs mt-1">สร้างลำดับขั้นตอนที่ชัดเจนในการแก้ปัญหา เช่น ขั้นตอนการชงนมผง หรือรหัสจำลอง (Pseudo Code) ในการเขียนโปรแกรม</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Topic 2: Data Structures -->
+                <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 backdrop-blur-md">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="bg-blue-500/20 text-blue-400 p-3 rounded-xl">
+                            <i class="fa-solid fa-network-wired text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">2. โครงสร้างข้อมูลเบื้องต้น (Introduction to Data Structures)</h3>
+                    </div>
+                    <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                        วิธีการจัดเก็บ จัดการ และจัดเรียงข้อมูลในระบบคอมพิวเตอร์อย่างมีระเบียบและมีประสิทธิภาพ
+                    </p>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-blue-500 pl-4 py-1">
+                            <h4 class="font-semibold text-white text-base">รายการ (List)</h4>
+                            <p class="text-slate-400 text-xs mt-1">การจัดกลุ่มสิ่งของต่อกันไปเรื่อยๆ มีลำดับที่แน่นอน เช่น รายการหนังสือที่ต้องอ่าน หรือขั้นตอนการทำอาหาร</p>
+                        </div>
+                        <div class="border-l-4 border-blue-500 pl-4 py-1">
+                            <h4 class="font-semibold text-white text-base">สแต็ก (Stack)</h4>
+                            <p class="text-slate-400 text-xs mt-1">โครงสร้างข้อมูลแบบ "เข้าทีหลังออกก่อน" (LIFO - Last In, First Out) ตัวอย่างจริง เช่น จานที่วางซ้อนกัน จานใบสุดท้ายที่วาง จะต้องถูกล้างก่อน</p>
+                        </div>
+                        <div class="border-l-4 border-blue-500 pl-4 py-1">
+                            <h4 class="font-semibold text-white text-base">คิว (Queue)</h4>
+                            <p class="text-slate-400 text-xs mt-1">โครงสร้างข้อมูลแบบ "เข้าก่อนออกก่อน" (FIFO - First In, First Out) ตัวอย่างจริง เช่น การเข้าแถวรอซื้อข้าวในโรงเรียน คนที่มาก่อนจะได้ซื้อก่อน</p>
+                        </div>
+                        <div class="border-l-4 border-blue-500 pl-4 py-1">
+                            <h4 class="font-semibold text-white text-base">ต้นไม้ตัดสินใจ (Decision Tree)</h4>
+                            <p class="text-slate-400 text-xs mt-1">โครงสร้างแสดงเงื่อนไขในการตัดสินใจแยกประเภทสิ่งของ เช่น แยกสัตว์มีกระดูกสันหลังตามการหายใจและออกลูกเป็นไข่/เป็นตัว</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: BOARD (KANBAN) ================= -->
+        <section id="page-board" class="h-full flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">กระดanงานเสมือนจริง</h2>
+                    <p class="text-sm text-slate-400">ใช้ทักษะการคิดเชิงคำนวณและโครงสร้างแบบ List ในการติดตามงานประจำวันของคุณลากวางย้ายสถานะได้เลย!</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow overflow-hidden">
+                <!-- Column 1: TO DO -->
+                <div class="flex flex-col bg-slate-900/40 border border-slate-800 rounded-2xl p-4 backdrop-blur-md">
+                    <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-800/60">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-3 h-3 rounded-full bg-rose-500 shadow-lg shadow-rose-500/50"></span>
+                            <h2 class="font-semibold text-lg text-slate-200">งานใหม่ (To Do)</h2>
+                        </div>
+                        <span id="todo-count" class="bg-slate-800 text-slate-400 text-xs px-2.5 py-1 rounded-full font-bold">0</span>
+                    </div>
+                    <div id="todo" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 transition-colors duration-200 rounded-lg p-1" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)">
+                        <!-- Items injected here by JS -->
+                    </div>
+                </div>
+
+                <!-- Column 2: IN PROGRESS -->
+                <div class="flex flex-col bg-slate-900/40 border border-slate-800 rounded-2xl p-4 backdrop-blur-md">
+                    <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-800/60">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-3 h-3 rounded-full bg-amber-500 shadow-lg shadow-amber-500/50"></span>
+                            <h2 class="font-semibold text-lg text-slate-200">กำลังทำ (In Progress)</h2>
+                        </div>
+                        <span id="in-progress-count" class="bg-slate-800 text-slate-400 text-xs px-2.5 py-1 rounded-full font-bold">0</span>
+                    </div>
+                    <div id="in-progress" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 transition-colors duration-200 rounded-lg p-1" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)">
+                        <!-- Items injected here by JS -->
+                    </div>
+                </div>
+
+                <!-- Column 3: DONE -->
+                <div class="flex flex-col bg-slate-900/40 border border-slate-800 rounded-2xl p-4 backdrop-blur-md">
+                    <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-800/60">
+                        <div class="flex items-center space-x-2.5">
+                            <span class="w-3 h-3 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/50"></span>
+                            <h2 class="font-semibold text-lg text-slate-200">เสร็จสิ้น (Done)</h2>
+                        </div>
+                        <span id="done-count" class="bg-slate-800 text-slate-400 text-xs px-2.5 py-1 rounded-full font-bold">0</span>
+                    </div>
+                    <div id="done" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 transition-colors duration-200 rounded-lg p-1" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)">
+                        <!-- Items injected here by JS -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Simulator Section inside Board -->
+            <div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Stack Simulator -->
+                <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+                    <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-purple-400"></i> ตัวลองเล่นโครงสร้างแบบ สแต็ก (Stack - LIFO)
+                    </h3>
+                    <p class="text-sm text-slate-400 mb-4">ข้อมูลที่ใสทีหลังสุด จะต้องถูกนำออกมาก่อน (Last In, First Out)</p>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="stackInput" placeholder="ใส่ข้อมูลที่จะเก็บ เช่น 'หนังสือ A'" class="flex-grow bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-purple-500">
+                        <button onclick="pushToStack()" class="bg-purple-600 hover:bg-purple-500 px-4 py-1.5 rounded-lg text-sm font-semibold transition">Push (ใส่)</button>
+                        <button onclick="popFromStack()" class="bg-rose-600 hover:bg-rose-500 px-4 py-1.5 rounded-lg text-sm font-semibold transition">Pop (ออก)</button>
+                    </div>
+                    <div class="flex flex-col-reverse items-center justify-end h-48 border border-slate-800 bg-slate-950/40 rounded-xl p-4 overflow-y-auto gap-2" id="stackContainer">
+                        <!-- Stack items rendered here -->
+                        <span class="text-slate-500 text-sm italic my-auto">สแต็กว่างเปล่า</span>
+                    </div>
+                </div>
+
+                <!-- Queue Simulator -->
+                <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
+                    <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-blue-400"></i> ตัวลองเล่นโครงสร้างแบบ คิว (Queue - FIFO)
+                    </h3>
+                    <p class="text-sm text-slate-400 mb-4">ข้อมูลที่เข้ามาก่อน จะได้ออกไปประมวลผลก่อนเสมอ (First In, First Out)</p>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="queueInput" placeholder="ใส่ข้อมูลที่จะต่อแถว เช่น 'คน A'" class="flex-grow bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-sm text-white focus:outline-none focus:border-blue-500">
+                        <button onclick="enqueue()" class="bg-blue-600 hover:bg-blue-500 px-4 py-1.5 rounded-lg text-sm font-semibold transition">Enqueue (เข้าแถว)</button>
+                        <button onclick="dequeue()" class="bg-amber-600 hover:bg-amber-500 px-4 py-1.5 rounded-lg text-sm font-semibold transition">Dequeue (ออกแถว)</button>
+                    </div>
+                    <div class="flex items-center justify-start h-48 border border-slate-800 bg-slate-950/40 rounded-xl p-4 overflow-x-auto gap-2" id="queueContainer">
+                        <!-- Queue items rendered here -->
+                        <span class="text-slate-500 text-sm italic mx-auto">คิวว่างเปล่า</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: QUIZ ================= -->
+        <section id="page-quiz" class="hidden max-w-3xl mx-auto">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 relative overflow-hidden">
+                <!-- Header of Quiz -->
+                <div class="flex justify-between items-center mb-6">
+                    <span id="quiz-step" class="text-sm font-semibold text-purple-400 uppercase tracking-widest">ระดับที่ 1: การจำ (Remember)</span>
+                    <span id="score-tracker" class="text-sm bg-slate-800 py-1 px-3 rounded-full text-slate-300">คะแนน: 0 / 6</span>
+                </div>
+
+                <!-- Quiz Progress Bar -->
+                <div class="w-full bg-slate-800 h-2 rounded-full mb-8 overflow-hidden">
+                    <div id="quiz-progress" class="bg-gradient-to-r from-purple-500 to-indigo-500 h-full transition-all duration-300" style="width: 16.66%"></div>
+                </div>
+
+                <!-- Quiz Content -->
+                <div id="quiz-container">
+                    <h3 id="quiz-question" class="text-xl font-semibold mb-6 leading-relaxed"></h3>
+                    <div id="quiz-options" class="grid grid-cols-1 gap-4">
+                        <!-- Option buttons go here -->
+                    </div>
+                </div>
+
+                <!-- Result Screen (Hidden initially) -->
+                <div id="result-container" class="hidden text-center py-6">
+                    <i class="fa-solid fa-trophy text-yellow-500 text-6xl mb-4 animate-bounce"></i>
+                    <h3 class="text-2xl font-bold mb-2">ยินดีด้วยกับการทดสอบเสร็จสมบูรณ์!</h3>
+                    <p id="final-score" class="text-slate-400 mb-6"></p>
+                    <button onclick="showCertificate()" class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-bold py-3 px-6 rounded-lg shadow-lg shadow-emerald-500/20 transition duration-150 inline-flex items-center gap-2">
+                        <i class="fa-solid fa-certificate"></i> รับเกียรติบัตรของคุณ
+                    </button>
+                    <button onclick="restartQuiz()" class="ml-4 bg-slate-800 text-slate-300 hover:bg-slate-700 py-3 px-6 rounded-lg transition">
+                        ทำแบบทดสอบอีกครั้ง
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 4: CERTIFICATE (Hidden by default) ================= -->
+        <section id="page-certificate" class="hidden max-w-2xl mx-auto text-center">
+            <div class="bg-white text-slate-800 p-8 rounded-xl border-8 border-yellow-500 shadow-2xl relative inline-block w-full">
+                <!-- Decorative border/corners -->
+                <div class="absolute inset-2 border-2 border-yellow-200 pointer-events-none"></div>
+                
+                <h1 class="font-serif text-3xl font-extrabold text-slate-900 uppercase tracking-widest mt-6">Certificate of Achievement</h1>
+                <p class="text-sm italic text-gray-500 mt-1">เกียรติบัตรใบนี้มอบให้เพื่อแสดงว่า</p>
+                
+                <div class="my-8">
+                    <input type="text" id="cert-name" placeholder="พิมพ์ชื่อของคุณตรงนี้..." class="text-center font-bold text-2xl border-b-2 border-gray-400 focus:outline-none focus:border-yellow-500 px-4 py-1 font-sans text-slate-800 max-w-md w-full placeholder:text-gray-300" oninput="drawCanvasCert()">
+                </div>
+                
+                <p class="text-md font-sans leading-relaxed text-gray-600 max-w-md mx-auto">
+                    ได้เรียนรู้และผ่านหลักสูตรการแก้ปัญหาและจัดการแบบแผนข้อมูล <br>
+                    <strong>"วิทยาการคำนวณป.6: คิดอย่างเป็นขั้นตอน (Computational Thinking)"</strong><br>
+                    ตามการทดสอบเทียบเคียงอนุกรมวิธานของบลูม (Bloom's Taxonomy)
+                </p>
+                
+                <div class="mt-8 flex justify-between px-10 items-end">
+                    <div class="text-left">
+                        <p class="text-xs text-gray-400">วันที่ได้รับ</p>
+                        <p class="font-semibold text-sm text-gray-700" id="cert-date"></p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-serif italic text-lg text-yellow-600">EduCoding Acad.</p>
+                        <p class="text-xs text-gray-400">ผู้รับรองบทเรียน</p>
+                    </div>
+                </div>
+
+                <canvas id="certCanvas" width="800" height="600" class="hidden"></canvas>
+            </div>
+            
+            <div class="mt-6 flex justify-center gap-4">
+                <button onclick="downloadCert()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2.5 px-6 rounded-lg flex items-center gap-2">
+                    <i class="fa-solid fa-download"></i> ดาวน์โหลดเป็นภาพ
+                </button>
+                <button onclick="openTab('board')" class="bg-slate-800 text-slate-300 hover:bg-slate-700 py-2.5 px-6 rounded-lg">
+                    กลับไปหน้าแรก
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal for Adding Tasks -->
+    <div id="addTaskModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center transition-all duration-300">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-md p-6 rounded-2xl shadow-2xl m-4 transform scale-95 transition-transform duration-300" id="addTaskModalContainer">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-circle-plus text-purple-500"></i> สร้างภารกิจใหม่
+                </h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white transition duration-150">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="taskFormMain" onsubmit="addTask(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-300 mb-1">ชื่อภารกิจ/งาน</label>
+                    <input type="text" id="taskTitle" required placeholder="ทำอะไรดีวันนี้..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-300 mb-1">รายละเอียดเพิ่มเติม</label>
+                    <textarea id="taskDesc" rows="3" placeholder="ใส่ข้อมูลระบุขั้นตอนหรือวัตถุประสงค์..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition resize-none"></textarea>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-slate-300 mb-2">ระดับความสำคัญ</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <label class="relative flex items-center justify-center p-3 rounded-lg border border-slate-800 cursor-pointer hover:bg-slate-800/30 transition">
+                            <input type="radio" name="priority" value="low" class="sr-only peer" checked>
+                            <span class="text-sm font-medium text-slate-400 peer-checked:text-emerald-400">ทั่วไป</span>
+                            <span class="absolute inset-0 border-2 border-transparent peer-checked:border-emerald-500 rounded-lg pointer-events-none"></span>
+                        </label>
+                        <label class="relative flex items-center justify-center p-3 rounded-lg border border-slate-800 cursor-pointer hover:bg-slate-800/30 transition">
+                            <input type="radio" name="priority" value="medium" class="sr-only peer">
+                            <span class="text-sm font-medium text-slate-400 peer-checked:text-amber-500">ปานกลาง</span>
+                            <span class="absolute inset-0 border-2 border-transparent peer-checked:border-amber-500 rounded-lg pointer-events-none"></span>
+                        </label>
+                        <label class="relative flex items-center justify-center p-3 rounded-lg border border-slate-800 cursor-pointer hover:bg-slate-800/30 transition">
+                            <input type="radio" name="priority" value="high" class="sr-only peer">
+                            <span class="text-sm font-medium text-slate-400 peer-checked:text-rose-500 font-bold">สำคัญเร่งด่วน</span>
+                            <span class="absolute inset-0 border-2 border-transparent peer-checked:border-rose-500 rounded-lg pointer-events-none"></span>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium rounded-lg shadow-lg shadow-indigo-500/25 transition duration-200">
+                    บันทึกข้อมูล
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footbar / Status Info -->
+    <footer class="text-center p-4 border-t border-slate-800 text-slate-500 text-xs mt-auto">
+        <p>จัดทำเพื่อเป็นสื่อการเรียนการสอนวิชาวิทยาการคำนวณ ชั้นประถมศึกษาปีที่ 6</p>
+    </footer>
+
+    <!-- JavaScript logic -->
+    <script>
+        // ข้อมูลหลักของระบบ
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [
+            {
+                id: '1',
+                title: 'แยกย่อยปัญหา (Decomposition)',
+                desc: 'แบ่งขั้นตอนการทอดไข่เจียวออกเป็นขั้นตอนเล็กๆ เช่น เตรียมอุปกรณ์ ตีไข่ ตั้งกระทะ ทอด และเสิร์ฟ',
+                status: 'todo',
+                priority: 'medium'
+            },
+            {
+                id: '2',
+                title: 'ค้นหารูปแบบ (Pattern Recognition)',
+                desc: 'วิเคราะห์ว่าการถอดรหัสของรหัสผ่านส่วนใหญ่ มักจะขึ้นต้นด้วยตัวอักษรพิมพ์ใหญ่ตัวแรกเสมอ',
+                status: 'in-progress',
+                priority: 'low'
+            },
+            {
+                id: '3',
+                title: 'เขียนโปรแกรมด้วย Scratch',
+                desc: 'ออกแบบโค้ดจำลองการเดินตามเส้นของรถยนต์อัจฉริยะ',
+                status: 'done',
+                priority: 'high'
+            }
+        ];
+
+        // ข้อมูลการศึกษาแบบจำลองสแต็กและคิว (Stack & Queue)
+        let stackData = ['วิชาวิทยาการคำนวณ', 'วิชาภาษาไทย', 'วิชาศิลปะ'];
+        let queueData = ['คิวที่ 1', 'คิวที่ 2', 'คิวที่ 3'];
+
+        // ข้อมูลคำถามสำหรับ Bloom's Taxonomy Quiz
+        const quizData = [
+            {
+                level: "ระดับที่ 1: การจำ (Remember)",
+                question: "ข้อใดคือ 'ขั้นตอนวิธี' (Algorithm) ที่ดีที่สุดสำหรับการสั่งต้มน้ำร้อน?",
+                options: [
+                    "A. เทน้ำลงหม้อ -> ต้มให้เดือด -> เสียบปลั๊กกาน้ำร้อน",
+                    "B. เทน้ำลงกา -> เสียบปลั๊กและกดสวิตช์ -> รอจนน้ำเดือดและระบบตัด",
+                    "C. กดสวิตช์ -> รอเดือด -> เทน้ำใส่แก้ว"
+                ],
+                answer: 1,
+                explanation: "อัลกอริทึมที่ดีจำเป็นต้องระบุขั้นตอนการทำงานอย่างเป็นลำดับที่ถูกต้องและชัดเจน"
+            },
+            {
+                level: "ระดับที่ 2: ความเข้าใจ (Understand)",
+                question: "หากคุณครูสั่งให้ 'แยกชนิดเสื้อผ้าตามสี' ตรงกับแนวคิดเชิงคำนวณข้อใด?",
+                options: [
+                    "A. การแบ่งย่อยปัญหา (Decomposition)",
+                    "B. การจดจำรูปแบบ (Pattern Recognition)",
+                    "C. การคิดเชิงนามธรรม (Abstraction)"
+                ],
+                answer: 1,
+                explanation: "การค้นหาลักษณะที่คล้ายคลึงกันหรือประเภทเดียวกัน เช่น สี สัญลักษณ์ เพื่อทำความเข้าใจกลุ่มข้อมูล คือการจดจำรูปแบบ"
+            },
+            {
+                level: "ระดับที่ 3: การประยุกต์ใช้ (Apply)",
+                question: "คุณมีกองสมุดที่วางซ้อนกันเป็นระดับ (Stack) จากล่างขึ้นบนเป็น 'ภาษาไทย - ภาษาอังกฤษ - คณิตศาสตร์' หากต้องการใช้สมุดเล่มบนสุด คุณจะต้องหยิบวิชาอะไรออกมาก่อน?",
+                options: [
+                    "A. ภาษาไทย",
+                    "B. ภาษาอังกฤษ",
+                    "C. คณิตศาสตร์"
+                ],
+                answer: 2,
+                explanation: "ลักษณะโครงสร้างแบบ Stack คือการทำแบบ LIFO (เข้าทีหลัง ออกก่อน) สมุดคณิตศาสตร์วางอยู่บนสุดจึงต้องถูกหยิบออกเป็นเล่มแรก"
+            },
+            {
+                level: "ระดับที่ 4: การวิเคราะห์ (Analyze)",
+                question: "พิจารณาข้อผิดพลาด: หากโปรแกรมไฟเขียว-ไฟแดงมีปัญหา ไฟไม่เปลี่ยนสีเลย เกิดจากส่วนใดในการวิเคราะห์ปัญหานี้?",
+                options: [
+                    "A. ไม่มีเวลาดีเลย์หรือการสลับสถานะในบล็อกชุดคำสั่ง",
+                    "B. ออกแบบขั้นตอนอย่างถูกต้องแล้ว แต่หลอดไฟเสีย",
+                    "C. หน้าตาโปรแกรมไม่เหมาะสมกับการขับเคลื่อนรถ"
+                ],
+                answer: 0,
+                explanation: "การวิเคราะห์โครงสร้างคำสั่งที่ผิดพลาดจะช่วยชี้ให้เห็นว่าเกิดจากการวนลูปทำคำสั่งซ้ำโดยที่ไม่มีเงื่อนไขสำหรับการเปลี่ยนเวลา"
+            },
+            {
+                level: "ระดับที่ 5: การประเมินค่า (Evaluate)",
+                question: "ระหว่างการประมวลผลระบบลงทะเบียนเรียนที่ใช้การจัดคิวเรียงตามการกดปุ่มสมัคร กับระบบการย้อนกลับหน้าจอบนเว็บเบราว์เซอร์ ทั้งสองอย่างนี้ควรใช้โครงสร้างข้อมูลแบบใดจึงดีที่สุด?",
+                options: [
+                    "A. ระบบสมัครเรียน: Stack / ระบบย้อนกลับ: Queue",
+                    "B. ระบบสมัครเรียน: Queue / ระบบย้อนกลับ: Stack",
+                    "C. ทั้งสองแบบสามารถใช้ List ธรรมดาโดยไม่ต้องเรียงลำดับ"
+                ],
+                answer: 1,
+                explanation: "การต่อคิวสมัครเรียนแบบมาถึงก่อนต้องได้สิทธิ์ก่อน (FIFO = Queue) ส่วนระบบย้อนกลับต้องการความสามารถในการเอาสถานล่าสุดออกก่อน (LIFO = Stack)"
+            },
+            {
+                level: "ระดับที่ 6: การสร้างสรรค์ (Create)",
+                question: "คุณได้รับภารกิจให้เดินทางในเกมหุ่นยนต์โดยต้อง 'เลี้ยวซ้าย จากนั้นเดินหน้า 3 ช่อง และเปิดไฟ' ขั้นตอนวิธีการเรียงบล็อกคำสั่งใดถูกต้อง?",
+                options: [
+                    "A. [เลี้ยวซ้าย] -> [เดินหน้า 3 ครั้ง] -> [เปิดไฟ]",
+                    "B. [เปิดไฟ] -> [เดินหน้า 3 ครั้ง] -> [เลี้ยวซ้าย]",
+                    "C. [เดินหน้า] -> [เลี้ยวซ้าย] -> [เดินหน้า 2 ครั้ง]"
+                ],
+                answer: 0,
+                explanation: "การสร้างลำดับที่ตรงตามเป้าหมายที่สุดเพื่อให้ผลลัพธ์การทำงานทำงานได้อย่างสมบูรณ์แบบสูงสุด"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // ล็อคเป้าหมาย HTML Elements
+        const columnsElements = {
+            'todo': document.getElementById('todo'),
+            'in-progress': document.getElementById('in-progress'),
+            'done': document.getElementById('done')
+        };
+
+        const countElements = {
+            'todo': document.getElementById('todo-count'),
+            'in-progress': document.getElementById('in-progress-count'),
+            'done': document.getElementById('done-count')
+        };
+
+        const modalElement = document.getElementById('addTaskModal');
+        const modalContainerElement = document.getElementById('addTaskModalContainer');
+
+        // ฟังก์ชันเริ่มต้นการทำงานของแอปพลิเคชัน
+        function initApp() {
+            renderTasks();
+            updateStackUI();
+            updateQueueUI();
+            loadQuestion();
+            
+            // ตั้งค่าวันที่ปัจจุบันในประกาศนียบัตร
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('cert-date').innerText = dateStr;
+            
+            // ตั้งค่าเริ่มต้นแสดงผลหน้าบอร์ด
+            openTab('board');
+        }
+
+        // คลาสของสีความแรงของประเภทงาน
+        const priorityColors = {
+            low: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+            medium: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+            high: 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+        };
+
+        const priorityLabel = {
+            low: 'ทั่วไป',
+            medium: 'ปานกลาง',
+            high: 'ด่วนที่สุด'
+        };
+
+        // ฟังก์ชันวาดรูปบอร์ดภารกิจขึ้นมาใหม่
+        function renderTasks() {
+            Object.values(columnsElements).forEach(col => col.innerHTML = '');
+
+            const totalCount = { 'todo': 0, 'in-progress': 0, 'done': 0 };
+
+            tasks.forEach(task => {
+                const card = document.createElement('div');
+                card.className = 'bg-cardBg border border-slate-800 p-4 rounded-xl cursor-grab active:cursor-grabbing hover:border-slate-700 transition shadow-md relative group';
+                card.draggable = true;
+                card.id = `task-${task.id}`;
+                card.dataset.id = task.id;
+
+                card.addEventListener('dragstart', dragStart);
+                card.addEventListener('dragend', dragEnd);
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-[10px] px-2 py-0.5 rounded-full border ${priorityColors[task.priority]}">
+                            ${priorityLabel[task.priority]}
+                        </span>
+                        <button onclick="deleteTask('${task.id}')" class="text-slate-500 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition duration-150 absolute top-3.5 right-3.5">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                    <h3 class="font-semibold text-white mb-1 pr-6 text-sm sm:text-base">${escapeHtml(task.title)}</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">${escapeHtml(task.desc)}</p>
+                `;
+
+                columnsElements[task.status].appendChild(card);
+                totalCount[task.status]++;
+            });
+
+            Object.keys(countElements).forEach(status => {
+                countElements[status].textContent = totalCount[status];
+            });
+
+            saveToLocalStorage();
+        }
+
+        // ฟังก์ชันการลากและวางการ์ด
+        let draggedItem = null;
+
+        function dragStart(e) {
+            draggedItem = this;
+            setTimeout(() => this.classList.add('opacity-40'), 0);
+            e.dataTransfer.setData('text/plain', this.dataset.id);
+        }
+
+        function dragEnd() {
+            this.classList.remove('opacity-40');
+            draggedItem = null;
+        }
+
+        function allowDrop(e) {
+            e.preventDefault();
+        }
+
+        function dragEnter(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function dragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function drop(e) {
+            e.preventDefault();
+            const targetColumn = e.currentTarget;
+            targetColumn.classList.remove('drag-over');
+            
+            const taskId = e.dataTransfer.getData('text/plain');
+            const targetStatus = targetColumn.id;
+
+            tasks = tasks.map(task => {
+                if (task.id === taskId) {
+                    task.status = targetStatus;
+                }
+                return task;
+            });
+
+            renderTasks();
+        }
+
+        // ส่วนของการจัดระบบโมดอลสำหรับการเพิ่มการ์ด
+        function openModal() {
+            modalElement.classList.remove('hidden');
+            modalElement.classList.add('flex');
+            setTimeout(() => {
+                modalContainerElement.classList.remove('scale-95');
+                modalContainerElement.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            modalContainerElement.classList.remove('scale-100');
+            modalContainerElement.classList.add('scale-95');
+            setTimeout(() => {
+                modalElement.classList.add('hidden');
+                modalElement.classList.remove('flex');
+                document.getElementById('taskFormMain').reset();
+            }, 150);
+        }
+
+        function addTask(e) {
+            e.preventDefault();
+            const title = document.getElementById('taskTitle').value;
+            const desc = document.getElementById('taskDesc').value;
+            const priority = document.querySelector('input[name="priority"]:checked').value;
+            
+            const newTask = {
+                id: Date.now().toString(),
+                title,
+                desc,
+                status: 'todo',
+                priority
+            };
+
+            tasks.push(newTask);
+            renderTasks();
+            closeModal();
+        }
+
+        function deleteTask(id) {
+            if(confirm('ต้องการลบภารกิจนี้ใช่หรือไม่?')) {
+                tasks = tasks.filter(task => task.id !== id);
+                renderTasks();
+            }
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // จัดการแท็บต่าง ๆ บนหน้าเว็บ
+        function openTab(tabName) {
+            const tabs = ['learn', 'board', 'quiz', 'certificate'];
+            tabs.forEach(tab => {
+                const element = document.getElementById(`page-${tab}`);
+                const button = document.getElementById(`tab-${tab}`);
+                if (tab === tabName) {
+                    element.classList.remove('hidden');
+                    if(button) {
+                        button.classList.add('text-white', 'bg-slate-800');
+                        button.classList.remove('text-slate-400');
+                    }
+                } else {
+                    element.classList.add('hidden');
+                    if(button) {
+                        button.classList.remove('text-white', 'bg-slate-800');
+                        button.classList.add('text-slate-400');
+                    }
+                }
+            });
+        }
+
+        // --- ระบบของจำลอง สแต็ก & คิว (Stack & Queue Simulators) ---
+        function pushToStack() {
+            const val = document.getElementById('stackInput').value.trim();
+            if(val !== '') {
+                stackData.push(val);
+                document.getElementById('stackInput').value = '';
+                updateStackUI();
+            }
+        }
+
+        function popFromStack() {
+            if(stackData.length > 0) {
+                stackData.pop();
+                updateStackUI();
+            } else {
+                alert('ไม่สามารถลบข้อมูลได้เนื่องจากสแต็กว่างเปล่า (Stack Underflow)');
+            }
+        }
+
+        function updateStackUI() {
+            const container = document.getElementById('stackContainer');
+            if (stackData.length === 0) {
+                container.innerHTML = '<span class="text-slate-500 text-sm italic my-auto">สแต็กว่างเปล่า (Stack is empty)</span>';
+                return;
+            }
+            container.innerHTML = '';
+            stackData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'w-full max-w-[250px] p-3 text-center rounded-lg border border-purple-500/30 bg-purple-500/10 text-purple-300 font-semibold animate-slideUp text-xs sm:text-sm';
+                div.innerText = `${index + 1}. ${item}`;
+                container.appendChild(div);
+            });
+        }
+
+        function enqueue() {
+            const val = document.getElementById('queueInput').value.trim();
+            if(val !== '') {
+                queueData.push(val);
+                document.getElementById('queueInput').value = '';
+                updateQueueUI();
+            }
+        }
+
+        function dequeue() {
+            if(queueData.length > 0) {
+                queueData.shift();
+                updateQueueUI();
+            } else {
+                alert('ไม่สามารถดึงข้อมูลได้เนื่องจากคิวว่างเปล่า (Queue Underflow)');
+            }
+        }
+
+        function updateQueueUI() {
+            const container = document.getElementById('queueContainer');
+            if (queueData.length === 0) {
+                container.innerHTML = '<span class="text-slate-500 text-sm italic mx-auto">คิวว่างเปล่า (Queue is empty)</span>';
+                return;
+            }
+            container.innerHTML = '';
+            queueData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex-shrink-0 w-28 h-28 flex items-center justify-center p-3 text-center rounded-xl border border-blue-500/30 bg-blue-500/10 text-blue-300 font-semibold text-xs';
+                div.innerText = `${index + 1}. ${item}`;
+                container.appendChild(div);
+            });
+        }
+
+        // --- ระบบของแบบทดสอบ (Quiz Engine) ---
+        function loadQuestion() {
+            const quizContainer = document.getElementById('quiz-container');
+            const resultContainer = document.getElementById('result-container');
+            
+            if (currentQuestionIndex >= quizData.length) {
+                quizContainer.classList.add('hidden');
+                resultContainer.classList.remove('hidden');
+                document.getElementById('final-score').innerText = `คุณทำคะแนนได้ทั้งหมด ${score} จาก ${quizData.length} คะแนน`;
+                document.getElementById('score-tracker').innerText = `สิ้นสุดการทดสอบ`;
+                return;
+            }
+
+            const currentQuestion = quizData[currentQuestionIndex];
+            
+            // แสดงสถานะระดับ
+            document.getElementById('quiz-step').innerText = currentQuestion.level;
+            document.getElementById('score-tracker').innerText = `คะแนน: ${score} / ${quizData.length}`;
+            
+            // ปรับเปอร์เซ็นต์แถบเลื่อน
+            const percent = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            document.getElementById('quiz-progress').style.width = `${percent}%`;
+
+            // แสดงคำถาม
+            document.getElementById('quiz-question').innerText = currentQuestion.question;
+
+            // แสดงตัวเลือกตอบ
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+            currentQuestion.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-4 rounded-xl border border-slate-800 hover:border-purple-500 hover:bg-purple-900/10 transition duration-150';
+                btn.innerHTML = opt;
+                btn.onclick = () => checkAnswer(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            const currentQuestion = quizData[currentQuestionIndex];
+            if (selectedIndex === currentQuestion.answer) {
+                score++;
+                alert('คำตอบถูกต้อง! \nคำอธิบาย: ' + currentQuestion.explanation);
+            } else {
+                alert('คำตอบผิดพลาด! \nคำตอบที่ถูกคือ: ' + currentQuestion.options[currentQuestion.answer] + '\nคำอธิบาย: ' + currentQuestion.explanation);
+            }
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('result-container').classList.add('hidden');
+            loadQuestion();
+        }
+
+        function showCertificate() {
+            openTab('certificate');
+            drawCanvasCert();
+        }
+
+        // วาดรูปเกียรติบัตรลง Canvas สำหรับการเซฟรูป
+        function drawCanvasCert() {
+            const canvas = document.getElementById('certCanvas');
+            const ctx = canvas.getContext('2d');
+            const name = document.getElementById('cert-name').value || 'น้องคนขยัน';
+
+            // พื้นหลังเกียรติบัตร
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, 800, 600);
+
+            // ขอบสีเหลืองสลักทอง
+            ctx.strokeStyle = '#d97706';
+            ctx.lineWidth = 15;
+            ctx.strokeRect(20, 20, 760, 560);
+            
+            ctx.strokeStyle = '#fef3c7';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(30, 30, 740, 540);
+
+            // หัวข้อหลัก
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 36px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('CERTIFICATE OF COMPLETION', 400, 120);
+
+            // รายละเอียด
+            ctx.font = 'italic 18px serif';
+            ctx.fillStyle = '#64748b';
+            ctx.fillText('เกียรติบัตรฉบับนี้มอบให้แก่ผู้ทำแบบทดสอบจบหลักสูตรได้สำเร็จ', 400, 180);
+
+            // ชื่อผู้สอบ
+            ctx.font = 'bold 32px sans-serif';
+            ctx.fillStyle = '#7c3aed';
+            ctx.fillText(name, 400, 260);
+
+            // บรรทัดใต้ชื่อ
+            ctx.beginPath();
+            ctx.moveTo(250, 280);
+            ctx.lineTo(550, 280);
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // เนื้อความความสามารถ
+            ctx.font = '20px sans-serif';
+            ctx.fillStyle = '#1e293b';
+            ctx.fillText('สำหรับความสำเร็จในการเข้าศึกษาและผ่านระดับความรู้', 400, 340);
+            ctx.font = 'bold 22px sans-serif';
+            ctx.fillText('“วิทยาการคำนวณ ป.6 (คิดเชิงคณิตและการออกแบบอัลกอริทึม)”', 400, 385);
+
+            // วันที่
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+            ctx.font = '14px sans-serif';
+            ctx.fillStyle = '#64748b';
+            ctx.textAlign = 'left';
+            ctx.fillText('วันที่อนุมัติ: ' + dateStr, 60, 480);
+
+            // ชื่อหน่วยงานรับรอง
+            ctx.textAlign = 'right';
+            ctx.font = 'italic bold 22px serif';
+            ctx.fillStyle = '#b45309';
+            ctx.fillText('EduCoding Academy', 740, 470);
+            ctx.font = '14px sans-serif';
+            ctx.fillStyle = '#64748b';
+            ctx.fillText('ผู้ตรวจและอนุญาตให้ผ่านเกณฑ์การเรียนรู้', 740, 495);
+        }
+
+        // ฟังก์ชันดาวน์โหลดภาพ
+        function downloadCert() {
+            const canvas = document.getElementById('certCanvas');
+            const link = document.createElement('a');
+            link.download = 'certificate.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // หลีกเลี่ยง XSS
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
